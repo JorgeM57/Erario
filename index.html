@@ -1779,13 +1779,20 @@ function renderExportarScreen(){
         const incoming = JSON.parse(reader.result);
         if(!incoming || !Array.isArray(incoming.transactions)){ showToast('Ese archivo no es una copia valida de Erario'); return; }
         const nAccounts = (incoming.accounts||[]).length, nTx = incoming.transactions.length;
+        const iHaveBank = !!(DATA.bankConnection && DATA.bankConnection.token);
+        const incomingHasBank = !!(incoming.bankConnection && incoming.bankConnection.token);
+        const bankNote = iHaveBank && !incomingHasBank
+          ? ' Tu conexion bancaria actual de esta instalacion se mantendra tal cual.'
+          : (incomingHasBank ? ' La copia trae su propia conexion bancaria, que sustituira a la que tengas aqui.' : '');
         openModal(`
           <div class="modal-title">Importar copia</div>
-          <p class="proj-note" style="padding:0 22px 14px;">Ese archivo trae ${nAccounts} cuenta(s) y ${nTx} movimiento(s). Al importar, se <b style="color:var(--red)">sustituira todo lo que tienes ahora</b> en esta instalacion por lo del archivo. Esto no se puede deshacer.</p>
+          <p class="proj-note" style="padding:0 22px 14px;">Ese archivo trae ${nAccounts} cuenta(s) y ${nTx} movimiento(s). Al importar, se <b style="color:var(--red)">sustituira todo lo que tienes ahora</b> en esta instalacion por lo del archivo.${bankNote} Esto no se puede deshacer.</p>
           <div class="btn-row"><button class="btn danger" id="btnConfirmImport">Sustituir y restaurar</button></div>
         `);
         document.getElementById('btnConfirmImport').addEventListener('click', ()=>{
+          const keepBank = DATA.bankConnection;
           Object.assign(DATA, incoming);
+          if(!incomingHasBank && iHaveBank) DATA.bankConnection = keepBank;
           if(!DATA.bankConnection) DATA.bankConnection = null;
           persist(); closeModal(); showToast('Copia restaurada correctamente');
           refreshCurrentContext(); renderInicio();
@@ -2272,12 +2279,16 @@ async function syncBank(){
   try{
     const resp = await fetch(`${WORKER_BASE_URL}/sync?token=${encodeURIComponent(DATA.bankConnection.token)}`);
     const data = await resp.json();
-    if(data.error){ showToast(data.error); return; }
+    if(data.error){
+      const detalle = data.detail ? (typeof data.detail==='string'?data.detail:JSON.stringify(data.detail)) : '';
+      showToast(`${data.error}${detalle ? ' — '+detalle.slice(0,160) : ''}`, 8000);
+      return;
+    }
     const already = new Set(DATA.transactions.filter(t=>t.externalId).map(t=>t.externalId));
     const nuevos = (data.movimientos||[]).filter(m=>!already.has(m.externalId));
     if(!nuevos.length){ showToast('No hay movimientos nuevos'); return; }
     openBankReview(nuevos);
-  }catch(e){ showToast('No se pudo sincronizar. Intentalo de nuevo.'); }
+  }catch(e){ showToast('No se pudo sincronizar: '+e.message, 8000); }
 }
 function openBankReview(movimientos){
   const selected = new Set(movimientos.map((m,i)=>i));
