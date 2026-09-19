@@ -189,6 +189,23 @@ p{margin:0;}
 
 /* ---------- CUENTAS ---------- */
 .total-card{margin:0 22px 18px; background:linear-gradient(165deg, var(--surface-2), var(--surface)); border:1px solid var(--border); border-radius:var(--radius-xl); padding:22px; box-shadow:0 18px 38px rgba(0,0,0,.4);}
+.bank-card{margin:0 22px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; box-shadow:0 14px 30px rgba(0,0,0,.32);}
+.bank-status{display:flex; align-items:center; gap:12px; margin-bottom:14px;}
+.bank-dot{width:9px; height:9px; border-radius:50%; flex:0 0 auto;}
+.bank-dot.on{background:var(--green); box-shadow:0 0 8px var(--green);}
+.bank-dot.off{background:var(--text-faint);}
+.review-row{display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border);}
+.review-row:last-child{border-bottom:none;}
+.review-check{width:22px; height:22px; border-radius:50%; border:1.5px solid var(--border-strong); flex:0 0 auto;}
+.review-row.selected .review-check{background:var(--accent); border-color:var(--accent); position:relative;}
+.review-row.selected .review-check::after{content:''; position:absolute; inset:0; margin:auto; width:6px; height:6px; border-radius:50%; background:#0B0918;}
+.review-mid{flex:1; min-width:0;}
+.review-desc{font-size:13.5px; font-weight:600;}
+.review-sub{font-size:11.5px; color:var(--text-faint); margin-top:2px;}
+.review-amt{font-family:var(--font-display); font-weight:600; font-size:14px; flex:0 0 auto;}
+.review-amt.gasto{color:var(--red);}
+.review-amt.ingreso{color:var(--green);}
+.review-cat-select{font-size:11px; background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:4px 6px; color:var(--text-dim); margin-top:5px;}
 .total-card .lbl{font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:var(--text-faint); font-weight:700;}
 .total-card .val{font-family:var(--font-display); font-size:34px; font-weight:600; margin-top:8px;}
 .acc-badge-row{display:flex; margin-top:16px; gap:-6px;}
@@ -541,6 +558,16 @@ p{margin:0;}
       <button class="btn ghost2" id="btnTransfer"></button>
       <button class="btn solid" id="btnAddAccount"></button>
     </div>
+    <div class="section-title">Banco</div>
+    <div id="bankCard"></div>
+  </div>
+
+  <!-- ============ REVISION DE IMPORTACION BANCARIA ============ -->
+  <div class="subscreen" id="bankReviewScreen">
+    <div class="subscreen-inner">
+      <div class="subscreen-head"><button class="icon-btn" id="bankReviewBack"></button><div class="subscreen-title">Revisar movimientos</div></div>
+      <div class="subscreen-body" id="bankReviewBody"></div>
+    </div>
   </div>
 
   <!-- ============ ANÁLISIS ============ -->
@@ -737,6 +764,7 @@ function fillStaticIcons(){
   document.getElementById('btnAddAccount').innerHTML = svg('plus')+' Nueva cuenta';
   document.getElementById('movBack').innerHTML = svg('back');
   document.getElementById('catBack').innerHTML = svg('back');
+  document.getElementById('bankReviewBack').innerHTML = svg('back');
   document.getElementById('recBack').innerHTML = svg('back');
   document.getElementById('budBack').innerHTML = svg('back');
   document.getElementById('expBack').innerHTML = svg('back');
@@ -754,6 +782,11 @@ function fillStaticIcons(){
 fillStaticIcons();
 
 /* ============ DATA LAYER ============ */
+/* Pon aqui la URL de tu Worker una vez lo despliegues en Cloudflare, ej:
+   'https://erario-banking.tuusuario.workers.dev' - mientras este vacio,
+   el apartado de banco simplemente se mantiene oculto/desactivado. */
+const WORKER_BASE_URL = 'https://erario-banking.jorgemb-57.workers.dev';
+
 const STORAGE_KEY = 'miscuentas_v3';
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,8); }
 function todayISO(){ return new Date().toISOString().slice(0,10); }
@@ -791,6 +824,7 @@ function defaultData(){
     transactions:[],
     recurrentes:[],
     goals:[],
+    bankConnection: null,
   };
 }
 
@@ -807,6 +841,7 @@ function load(){
     if(trabajoCat && trabajoCat.type==='ingreso' && !parsed.transactions.some(t=>t.categoryId==='trabajo')) trabajoCat.type = 'gasto';
     if(!parsed.recurrentes) parsed.recurrentes = [];
     if(!parsed.goals) parsed.goals = [];
+    if(parsed.bankConnection===undefined) parsed.bankConnection = null;
     parsed.goals.forEach(g=>{ if(!g.kind) g.kind = 'ahorro'; });
     const newDefaults = [
       {id:'viajes_g', name:'Viajes', icon:'plane', type:'gasto', color:'#8FC2B6'},
@@ -1065,6 +1100,7 @@ function renderCuentas(){
       <div class="acc-bal" style="color:${accountBalance(a.id)>=0?'var(--text)':'var(--red)'}">${fmtMoney(accountBalance(a.id))}€</div>
     </div>`).join('') || `<div class="empty">${svg('empty')}<p>No tienes cuentas todavía</p></div>`;
   document.getElementById('cuentasList').querySelectorAll('[data-editacc]').forEach(b=>b.addEventListener('click', ()=>openAccountModal(b.dataset.editacc)));
+  renderBankCard();
 }
 document.getElementById('btnTransfer').addEventListener('click', openTransferModal);
 document.getElementById('btnAddAccount').addEventListener('click', ()=>openAccountModal(null));
@@ -2137,9 +2173,129 @@ document.getElementById('quickOpenApp').addEventListener('click', ()=>{
   renderInicio();
 });
 
+/* ============ BANCO (Open Banking via el Worker) ============
+   Aqui solo se guarda un "token" de conexion (necesario para pedir
+   movimientos), nunca tus datos financieros - esos siguen viviendo
+   unicamente en el almacenamiento local de tu telefono, como siempre. */
+function renderBankCard(){
+  const el = document.getElementById('bankCard');
+  if(!WORKER_BASE_URL){
+    el.innerHTML = `<div class="bank-card"><div class="bank-status"><span class="bank-dot off"></span><span style="font-size:13.5px; color:var(--text-dim);">Aun no configurado</span></div><p class="proj-note">Cuando despliegues el servidor de conexion bancaria, pon su direccion en <code>WORKER_BASE_URL</code> dentro del archivo y este apartado se activara solo.</p></div>`;
+    return;
+  }
+  const connected = !!(DATA.bankConnection && DATA.bankConnection.token);
+  el.innerHTML = `
+    <div class="bank-card">
+      <div class="bank-status"><span class="bank-dot ${connected?'on':'off'}"></span><span style="font-size:13.5px; font-weight:600;">${connected?'CaixaBank conectado':'Sin conectar'}</span></div>
+      ${connected ? `<p class="proj-note" style="margin-bottom:14px;">Ultima sincronizacion: ${DATA.bankConnection.lastSync ? fmtDateShortEs(DATA.bankConnection.lastSync) : 'nunca'}</p>` : `<p class="proj-note" style="margin-bottom:14px;">Conecta tu cuenta para traer tus movimientos automaticamente. Siempre podras revisarlos antes de que se guarden.</p>`}
+      <div class="btn-row">
+        ${connected ? `<button class="btn ghost2" id="btnBankDisconnect" style="flex:0;">Desconectar</button><button class="btn solid" id="btnBankSync">Sincronizar ahora</button>` : `<button class="btn solid" id="btnBankConnect" style="width:100%;">Conectar CaixaBank</button>`}
+      </div>
+    </div>
+  `;
+  const connectBtn = document.getElementById('btnBankConnect'); if(connectBtn) connectBtn.addEventListener('click', connectBank);
+  const syncBtn = document.getElementById('btnBankSync'); if(syncBtn) syncBtn.addEventListener('click', syncBank);
+  const disconnectBtn = document.getElementById('btnBankDisconnect'); if(disconnectBtn) disconnectBtn.addEventListener('click', ()=>{
+    DATA.bankConnection = null; persist(); renderBankCard(); showToast('Banco desconectado');
+  });
+}
+async function connectBank(){
+  try{
+    showToast('Conectando con tu banco...');
+    const resp = await fetch(`${WORKER_BASE_URL}/connect`);
+    const data = await resp.json();
+    if(data.redirect_url){ window.location.href = data.redirect_url; }
+    else{ showToast('No se pudo iniciar la conexion.'); }
+  }catch(e){ showToast('No se pudo contactar con el servidor de conexion.'); }
+}
+function checkBankCallback(){
+  const hash = window.location.hash || '';
+  if(hash.indexOf('bankconnected')===-1) return false;
+  const qIndex = hash.indexOf('?');
+  const params = new URLSearchParams(qIndex>=0 ? hash.slice(qIndex+1) : '');
+  const token = params.get('token');
+  history.replaceState(null, '', window.location.pathname + window.location.search);
+  if(token){
+    DATA.bankConnection = { token, lastSync: null };
+    persist();
+    showToast('Banco conectado correctamente');
+  }
+  return true;
+}
+async function syncBank(){
+  if(!DATA.bankConnection || !DATA.bankConnection.token){ showToast('Conecta primero tu banco'); return; }
+  showToast('Descargando movimientos...');
+  try{
+    const resp = await fetch(`${WORKER_BASE_URL}/sync?token=${encodeURIComponent(DATA.bankConnection.token)}`);
+    const data = await resp.json();
+    if(data.error){ showToast(data.error); return; }
+    const already = new Set(DATA.transactions.filter(t=>t.externalId).map(t=>t.externalId));
+    const nuevos = (data.movimientos||[]).filter(m=>!already.has(m.externalId));
+    if(!nuevos.length){ showToast('No hay movimientos nuevos'); return; }
+    openBankReview(nuevos);
+  }catch(e){ showToast('No se pudo sincronizar. Intentalo de nuevo.'); }
+}
+function openBankReview(movimientos){
+  const selected = new Set(movimientos.map((m,i)=>i));
+  document.getElementById('bankReviewScreen').classList.add('open');
+  function render(){
+    const body = document.getElementById('bankReviewBody');
+    body.innerHTML = `
+      <p class="proj-note" style="padding:0 22px 14px;">Hemos encontrado ${movimientos.length} movimiento${movimientos.length===1?'':'s'} nuevo${movimientos.length===1?'':'s'}. Revisa la categoria de cada uno y desmarca los que no quieras importar.</p>
+      <div class="card">
+        ${movimientos.map((m,i)=>{
+          const catsOfType = DATA.categories.filter(c=>c.type===m.type);
+          const cat = catsOfType.find(c=>c.id===m.suggestedCategory) || catsOfType.find(c=>c.name==='Otros') || catsOfType[0];
+          return `<div class="review-row ${selected.has(i)?'selected':''}" data-idx="${i}">
+            <div class="review-check"></div>
+            <div class="review-mid">
+              <div class="review-desc">${m.description}</div>
+              <div class="review-sub">${fmtDateShortEs(m.date)} - ${m.type==='gasto'?'Gasto':'Ingreso'}</div>
+              <select class="review-cat-select" data-cat-idx="${i}">${catsOfType.map(c=>`<option value="${c.id}" ${c.id===(cat&&cat.id)?'selected':''}>${c.name}</option>`).join('')}</select>
+            </div>
+            <div class="review-amt ${m.type}">${m.type==='gasto'?'-':'+'}${fmtMoney(m.amount)}€</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="btn-row" style="margin:16px 22px;"><button class="btn solid" id="btnBankImport" style="width:100%;">Importar seleccionados</button></div>
+    `;
+    body.querySelectorAll('.review-row').forEach(row=>row.addEventListener('click', e=>{
+      if(e.target.tagName==='SELECT') return;
+      const idx = parseInt(row.dataset.idx);
+      if(selected.has(idx)) selected.delete(idx); else selected.add(idx);
+      row.classList.toggle('selected');
+    }));
+    document.getElementById('btnBankImport').addEventListener('click', ()=>{
+      const acc = primaryAccount();
+      if(!acc){ showToast('Crea primero una cuenta'); return; }
+      let count = 0;
+      movimientos.forEach((m,i)=>{
+        if(!selected.has(i)) return;
+        const sel = body.querySelector(`[data-cat-idx="${i}"]`);
+        const categoryId = sel ? sel.value : m.suggestedCategory;
+        DATA.transactions.push({
+          id:uid(), type:m.type, accountId:acc.id, categoryId,
+          amount:Math.round(m.amount*100)/100, date:m.date, note:m.description,
+          externalId:m.externalId, createdAt:new Date().toISOString(),
+        });
+        count++;
+      });
+      DATA.bankConnection.lastSync = todayISO();
+      persist();
+      document.getElementById('bankReviewScreen').classList.remove('open');
+      showToast(`${count} movimiento${count===1?'':'s'} importado${count===1?'':'s'}`);
+      refreshCurrentContext(); renderBankCard();
+    });
+  }
+  render();
+}
+document.getElementById('bankReviewBack').addEventListener('click', ()=> document.getElementById('bankReviewScreen').classList.remove('open'));
+
 generateDueRecurrentes();
+const handledBankCallback = checkBankCallback();
 const handledQuickAction = handleQuickAction();
-if(!handledQuickAction) renderInicio();
+if(!handledQuickAction && !handledBankCallback) renderInicio();
+else if(handledBankCallback) renderInicio();
 persist();
 })();
 </script>
