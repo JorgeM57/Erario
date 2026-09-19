@@ -887,12 +887,12 @@ function accountBalance(accId){
   return bal;
 }
 function totalBalance(){ return DATA.accounts.reduce((s,a)=>s+accountBalance(a.id),0); }
-function showToast(msg){
+function showToast(msg, ms){
   const t = document.getElementById('toast');
   document.getElementById('toastText').textContent = msg;
   t.classList.add('show');
   clearTimeout(showToast._h);
-  showToast._h = setTimeout(()=>t.classList.remove('show'), 2200);
+  showToast._h = setTimeout(()=>t.classList.remove('show'), ms || 2200);
 }
 function iconStyle(color){ return `style="background:${color}; box-shadow:0 0 22px ${color}33;"`; }
 
@@ -1753,7 +1753,48 @@ function renderExportarScreen(){
       <div class="form-row nopad"><label>Año</label><select id="expYear2">${years.map(y=>`<option value="${y}">${y}</option>`).join('')}</select></div>
       <div class="btn-row"><button class="btn ghost2" id="btnExportYear">Excel del año completo</button></div>
     </div>
+    <div class="card">
+      <div class="card-title">Copia de seguridad completa</div>
+      <p class="proj-note" style="margin-bottom:14px;">Guarda absolutamente todo (cuentas, movimientos, categorias, objetivos, presupuestos, habituales) en un archivo. Sirve para pasar tus datos a otra instalacion de Erario.</p>
+      <div class="btn-row"><button class="btn solid" id="btnExportJSON">Exportar copia completa</button></div>
+      <div class="btn-row" style="margin-top:10px;"><button class="btn ghost2" id="btnImportJSON">Importar copia</button></div>
+      <input type="file" id="importFileInput" accept="application/json" style="display:none;">
+    </div>
   `;
+  document.getElementById('btnExportJSON').addEventListener('click', ()=>{
+    const blob = new Blob([JSON.stringify(DATA, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `erario_copia_${todayISO()}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    showToast('Copia exportada');
+  });
+  document.getElementById('btnImportJSON').addEventListener('click', ()=> document.getElementById('importFileInput').click());
+  document.getElementById('importFileInput').addEventListener('change', (e)=>{
+    const file = e.target.files[0]; if(!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try{
+        const incoming = JSON.parse(reader.result);
+        if(!incoming || !Array.isArray(incoming.transactions)){ showToast('Ese archivo no es una copia valida de Erario'); return; }
+        const nAccounts = (incoming.accounts||[]).length, nTx = incoming.transactions.length;
+        openModal(`
+          <div class="modal-title">Importar copia</div>
+          <p class="proj-note" style="padding:0 22px 14px;">Ese archivo trae ${nAccounts} cuenta(s) y ${nTx} movimiento(s). Al importar, se <b style="color:var(--red)">sustituira todo lo que tienes ahora</b> en esta instalacion por lo del archivo. Esto no se puede deshacer.</p>
+          <div class="btn-row"><button class="btn danger" id="btnConfirmImport">Sustituir y restaurar</button></div>
+        `);
+        document.getElementById('btnConfirmImport').addEventListener('click', ()=>{
+          Object.assign(DATA, incoming);
+          if(!DATA.bankConnection) DATA.bankConnection = null;
+          persist(); closeModal(); showToast('Copia restaurada correctamente');
+          refreshCurrentContext(); renderInicio();
+        });
+      }catch(err){ showToast('No se pudo leer ese archivo'); }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  });
   document.getElementById('btnExportMonth').addEventListener('click', ()=>{
     const m = parseInt(document.getElementById('expMonth').value), y = parseInt(document.getElementById('expYear').value);
     const s = new Date(y,m,1), e = new Date(y,m+1,0,23,59,59);
@@ -2205,8 +2246,11 @@ async function connectBank(){
     const resp = await fetch(`${WORKER_BASE_URL}/connect`);
     const data = await resp.json();
     if(data.redirect_url){ window.location.href = data.redirect_url; }
-    else{ showToast('No se pudo iniciar la conexion.'); }
-  }catch(e){ showToast('No se pudo contactar con el servidor de conexion.'); }
+    else{
+      const detalle = data.detail ? (typeof data.detail==='string'?data.detail:JSON.stringify(data.detail)) : '';
+      showToast(`${data.error || 'No se pudo iniciar la conexion.'}${detalle ? ' — '+detalle.slice(0,140) : ''}`, 7000);
+    }
+  }catch(e){ showToast('No se pudo contactar con el servidor de conexion: '+e.message, 7000); }
 }
 function checkBankCallback(){
   const hash = window.location.hash || '';
