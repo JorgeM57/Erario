@@ -107,7 +107,7 @@ h1,h2,h3{margin:0; font-family:var(--font-display);}
 p{margin:0;}
 
 /* ================= TAB SCREENS ================= */
-.tab-screen{display:none; min-height:100vh; padding-top:calc(env(safe-area-inset-top) + 22px); padding-bottom:calc(var(--nav-h) + 30px + env(safe-area-inset-bottom)); position:relative;}
+.tab-screen{display:none; min-height:100vh; padding-top:calc(env(safe-area-inset-top) + 22px); padding-bottom:calc(var(--nav-h) + 108px + env(safe-area-inset-bottom)); position:relative;}
 .tab-screen::before{content:''; position:absolute; top:-40px; left:50%; transform:translateX(-50%); width:360px; height:230px; background:radial-gradient(ellipse at center, rgba(255,255,255,.035), transparent 72%); pointer-events:none;}
 .tab-screen.active{display:block;}
 
@@ -431,7 +431,7 @@ p{margin:0;}
 .note-field::placeholder{color:var(--text-faint);}
 
 .flow-foot{padding:14px 22px calc(20px + env(safe-area-inset-bottom));}
-.btn{border:none; border-radius:999px; padding:17px 0; font-family:var(--font-display); font-weight:700; font-size:15px; width:100%; display:flex; align-items:center; justify-content:center; gap:8px;}
+.btn{border:none; border-radius:999px; padding:17px 16px; font-family:var(--font-display); font-weight:700; font-size:15px; width:100%; display:flex; align-items:center; justify-content:center; gap:8px;}
 .btn svg{width:17px; height:17px;}
 .btn.solid{background:linear-gradient(135deg, var(--accent-2), var(--accent)); color:#0B0918;}
 .btn.solid.gasto{background:var(--red); color:#180E0D;}
@@ -465,7 +465,7 @@ p{margin:0;}
 
 .form-row{margin-bottom:14px; padding:0 22px;}
 .form-row label{font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-faint); font-weight:700; display:block; margin-bottom:8px;}
-.form-row input[type=text],.form-row input[type=number],.form-row input[type=date],.form-row select{width:100%; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:13px; color:var(--text); font-size:14.5px;}
+.form-row input[type=text],.form-row input[type=tel],.form-row input[type=number],.form-row input[type=date],.form-row select{width:100%; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:13px; color:var(--text); font-size:14.5px;}
 .form-row input[type=date]{width:100%; max-width:100%; box-sizing:border-box; -webkit-appearance:none; appearance:none; display:block;}
 .form-row input[type=date]::-webkit-date-and-time-value{text-align:left;}
 .form-row.nopad{padding:0;}
@@ -495,6 +495,34 @@ p{margin:0;}
 .quick-icon svg{width:34px; height:34px;}
 .quick-title{font-family:var(--font-display); font-weight:600; font-size:22px;}
 .quick-sub{font-size:14px; color:var(--text-dim); margin-top:10px; line-height:1.5; max-width:300px;}
+
+/* ---------- BANCO / COMPARTIDOS ---------- */
+.bank-title{font-size:14px; font-weight:600;}
+.bank-meta{font-size:12.5px; color:var(--text-dim); line-height:1.55; margin:0 0 16px;}
+.bank-meta b{color:var(--text); font-weight:600;}
+.bank-link-btn{display:block; margin:10px auto 0; background:none; border:none; color:var(--text-faint); font-size:13px; font-weight:600; padding:10px 18px; border-radius:999px; font-family:inherit;}
+.bank-link-btn:active{background:var(--surface-2);}
+.switch-row{position:relative; display:flex; align-items:center; justify-content:space-between; gap:14px; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 14px; margin-bottom:12px; cursor:pointer;}
+.switch-row .sw-text{display:flex; flex-direction:column; gap:2px; min-width:0;}
+.switch-row .sw-text b{font-size:14px; font-weight:600;}
+.switch-row .sw-text small{font-size:11.5px; color:var(--text-faint);}
+.switch-row input{position:absolute; opacity:0; width:0; height:0; pointer-events:none;}
+.switch{width:44px; height:26px; border-radius:999px; background:var(--surface-3); border:1px solid var(--border-strong); position:relative; flex:0 0 auto; transition:.2s;}
+.switch::after{content:''; position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%; background:var(--text-dim); transition:.2s;}
+.switch-row input:checked + .switch{background:var(--accent); border-color:var(--accent);}
+.switch-row input:checked + .switch::after{left:20px; background:#0B0918;}
+.share-extra{margin:-4px 0 12px;}
+.move-tag{display:inline-block; font-size:10.5px; font-weight:700; padding:1px 7px; border-radius:999px; background:rgba(140,124,240,.16); color:var(--accent-2); margin-right:6px;}
+.review-share{display:inline-flex; align-items:center; margin-top:6px; font-size:11px; font-weight:600; color:var(--text-dim); background:var(--surface-2); border:1px solid var(--border); border-radius:999px; padding:4px 10px; font-family:inherit;}
+.review-share.on{background:rgba(140,124,240,.16); border-color:var(--accent); color:var(--accent-2);}
+.review-link-select{display:block; max-width:100%; font-size:11px; background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:4px 6px; color:var(--text-dim); margin-top:5px;}
+.owed-total{font-family:var(--font-display); font-size:26px; font-weight:600; color:var(--green); margin:2px 0 4px;}
+.owed-row{display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border);}
+.owed-row:last-child{border-bottom:none; padding-bottom:0;}
+.owed-mid{flex:1; min-width:0;}
+.owed-name{font-size:13.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.owed-sub{font-size:11.5px; color:var(--text-faint); margin-top:2px;}
+.owed-close{flex:0 0 auto; background:var(--surface-2); border:1px solid var(--border); color:var(--text-dim); font-size:12px; font-weight:600; padding:8px 14px; border-radius:999px; font-family:inherit;}
 </style>
 </head>
 <body>
@@ -558,6 +586,7 @@ p{margin:0;}
       <button class="btn ghost2" id="btnTransfer"></button>
       <button class="btn solid" id="btnAddAccount"></button>
     </div>
+    <div id="owedSection"></div>
     <div class="section-title">Banco</div>
     <div id="bankCard"></div>
   </div>
@@ -887,6 +916,139 @@ function accountBalance(accId){
   return bal;
 }
 function totalBalance(){ return DATA.accounts.reduce((s,a)=>s+accountBalance(a.id),0); }
+/* ============ GASTOS COMPARTIDOS ============ */
+/* El saldo de las cuentas siempre usa el dinero real. Las estadisticas
+   (ingresos/gastos, graficos, presupuestos, predicciones) usan el coste real:
+   gasto compartido - lo que te han devuelto; y los reembolsos solo cuentan
+   como ingreso en la parte que supere al gasto. */
+function round2(n){ return Math.round((n+Number.EPSILON)*100)/100; }
+function byDateDesc(a,b){ return b.date.localeCompare(a.date) || String(b.createdAt||'').localeCompare(String(a.createdAt||'')); }
+function reimbursementsOf(gastoId){ return DATA.transactions.filter(t=>t.type==='ingreso' && t.reimbursesId===gastoId); }
+function sharedInfo(g){
+  const list = reimbursementsOf(g.id);
+  const back = round2(list.reduce((s,t)=>s+t.amount,0));
+  const expected = (typeof g.expectedBack==='number' && g.expectedBack>0) ? round2(g.expectedBack) : null;
+  return {
+    back, count:list.length, expected,
+    net: round2(Math.max(0, g.amount-back)),
+    pending: expected!=null ? round2(Math.max(0, expected-back)) : null,
+    closed: !!g.sharedClosed,
+  };
+}
+function isSharedGasto(g){ return g && g.type==='gasto' && (g.shared || reimbursementsOf(g.id).length>0); }
+function isOpenShared(g){
+  if(!g || g.type!=='gasto' || !g.shared || g.sharedClosed) return false;
+  const i = sharedInfo(g);
+  return i.expected==null ? true : i.back < i.expected;
+}
+function linkedGasto(t){
+  if(!t || t.type!=='ingreso' || !t.reimbursesId) return null;
+  const g = DATA.transactions.find(x=>x.id===t.reimbursesId);
+  return g && g.type==='gasto' ? g : null;
+}
+function gastoLabel(g){
+  const c = categoryById(g.categoryId);
+  const name = (g.note && g.note.trim()) || (c ? c.name : 'Gasto');
+  return `${fmtDateShortEs(g.date)} · ${name} · ${fmtMoney(g.amount)}€`;
+}
+function linkCandidates(extraId){
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-120);
+  const cISO = cutoff.toISOString().slice(0,10);
+  const open = DATA.transactions.filter(isOpenShared).sort(byDateDesc);
+  const openIds = new Set(open.map(g=>g.id));
+  const others = DATA.transactions.filter(t=>t.type==='gasto' && !openIds.has(t.id) && (t.date>=cISO || t.id===extraId)).sort(byDateDesc).slice(0,60);
+  return {open, others};
+}
+function linkOptionsHtml(selectedId, noneLabel){
+  const {open, others} = linkCandidates(selectedId);
+  const opt = g=>`<option value="${g.id}" ${g.id===selectedId?'selected':''}>${escHtml(gastoLabel(g))}</option>`;
+  return `<option value="">${noneLabel||'Elige el gasto…'}</option>`
+    + (open.length ? `<optgroup label="Compartidos pendientes">${open.map(opt).join('')}</optgroup>` : '')
+    + (others.length ? `<optgroup label="Otros gastos recientes">${others.map(opt).join('')}</optgroup>` : '');
+}
+function statTransactions(){
+  const txs = DATA.transactions;
+  const byId = new Map(txs.map(t=>[t.id,t]));
+  const groups = new Map();
+  txs.forEach(t=>{
+    if(t.type!=='ingreso' || !t.reimbursesId) return;
+    const g = byId.get(t.reimbursesId);
+    if(!g || g.type!=='gasto') return;
+    if(!groups.has(g.id)) groups.set(g.id, []);
+    groups.get(g.id).push(t);
+  });
+  const excess = new Map(), back = new Map();
+  groups.forEach((list, gid)=>{
+    const g = byId.get(gid);
+    list.sort((a,b)=> a.date.localeCompare(b.date) || String(a.createdAt||'').localeCompare(String(b.createdAt||'')) || String(a.id).localeCompare(String(b.id)));
+    let acc = 0;
+    list.forEach(r=>{
+      const before = acc; acc = round2(acc + r.amount);
+      excess.set(r.id, round2(Math.max(0, acc - Math.max(before, g.amount))));
+    });
+    back.set(gid, acc);
+  });
+  const out = [];
+  txs.forEach(t=>{
+    if(t.type==='gasto' && back.has(t.id)){
+      const net = round2(Math.max(0, t.amount - back.get(t.id)));
+      if(net>0) out.push(Object.assign({}, t, {amount:net}));
+    } else if(t.type==='ingreso' && excess.has(t.id)){
+      const ex = excess.get(t.id);
+      if(ex>0) out.push(Object.assign({}, t, {amount:ex}));
+    } else out.push(t);
+  });
+  return out;
+}
+function parseAmountStr(v){ const n = parseFloat(String(v==null?'':v).replace(/\s/g,'').replace(',','.')); return isFinite(n) ? n : 0; }
+function wireSwitch(inputId, extraId, onChange){
+  const inp = document.getElementById(inputId); if(!inp) return;
+  inp.addEventListener('change', ()=>{
+    const ex = document.getElementById(extraId); if(ex) ex.style.display = inp.checked ? 'block' : 'none';
+    if(onChange) onChange(inp.checked);
+  });
+}
+function moveNoteHtml(t){
+  const base = escHtml(t.note ? t.note : (accountById(t.accountId)?.name||''));
+  if(t.type==='gasto' && isSharedGasto(t)){
+    const i = sharedInfo(t);
+    return `<span class="move-tag">Compartido</span>${i.back>0 ? `coste real ${fmtMoney(i.net)}€${t.note?' · ':''}${t.note?base:''}` : base}`;
+  }
+  if(t.type==='ingreso'){
+    const g = linkedGasto(t);
+    if(g){ const c = categoryById(g.categoryId); return `<span class="move-tag">Reembolso</span>${escHtml((g.note && g.note.trim()) || (c ? c.name : 'Gasto'))} · ${fmtDateShortEs(g.date)}`; }
+  }
+  return base;
+}
+function sharedEditHtml(t){
+  const i = sharedInfo(t);
+  const on = isSharedGasto(t);
+  return `<label class="switch-row"><span class="sw-text"><b>Gasto compartido</b><small>${i.count ? `Te han devuelto ${fmtMoney(i.back)}€ · coste real ${fmtMoney(i.net)}€` : 'Pagaste por otros y te lo devolverán'}</small></span><input type="checkbox" id="mEShared" ${on?'checked':''}><i class="switch"></i></label>
+    <div class="share-extra" id="mESharedExtra" style="display:${on?'block':'none'}">
+      <div class="form-row nopad"><label>Te deben (opcional)</label><input type="tel" inputmode="decimal" id="mEExpected" placeholder="Ej: 75" value="${i.expected!=null ? String(i.expected).replace('.',',') : ''}"></div>
+      <label class="switch-row"><span class="sw-text"><b>Cerrado</b><small>Ya no espero más reembolsos</small></span><input type="checkbox" id="mEClosed" ${t.sharedClosed?'checked':''}><i class="switch"></i></label>
+    </div>`;
+}
+function reimbEditHtml(t){
+  const g = linkedGasto(t);
+  return `<label class="switch-row"><span class="sw-text"><b>Es un reembolso</b><small>Te devuelven parte de un gasto compartido</small></span><input type="checkbox" id="mEReimb" ${g?'checked':''}><i class="switch"></i></label>
+    <div class="form-row nopad share-extra" id="mEReimbExtra" style="display:${g?'block':'none'}"><label>¿De qué gasto?</label><select id="mEReimbSel">${linkOptionsHtml(g ? g.id : '')}</select></div>`;
+}
+function reviewLinkOptions(m, movimientos){
+  const {open, others} = linkCandidates();
+  const batch = movimientos.map((x,j)=>({x,j})).filter(o=>o.x.type==='gasto');
+  const suggested = /bizum/i.test(m.description||'') ? (open.find(g=>g.date<=m.date) || open[0] || null) : null;
+  const opt = (v,label,sel)=>`<option value="${v}" ${sel?'selected':''}>${escHtml(label)}</option>`;
+  return `<option value="">No es un reembolso</option>`
+    + (open.length ? `<optgroup label="Reembolso de un compartido">${open.map(g=>opt(g.id, gastoLabel(g), suggested && suggested.id===g.id)).join('')}</optgroup>` : '')
+    + (batch.length ? `<optgroup label="Reembolso de un gasto de esta lista">${batch.map(o=>opt('batch:'+o.j, `${fmtDateShortEs(o.x.date)} · ${o.x.description} · ${fmtMoney(o.x.amount)}€`, false)).join('')}</optgroup>` : '')
+    + (others.length ? `<optgroup label="Reembolso de otro gasto">${others.map(g=>opt(g.id, gastoLabel(g), false)).join('')}</optgroup>` : '');
+}
+function owedSummary(){
+  const list = DATA.transactions.filter(isOpenShared).sort(byDateDesc);
+  const total = round2(list.reduce((s,g)=>{ const p=sharedInfo(g).pending; return s+(p||0); },0));
+  return {list, total};
+}
 function showToast(msg, ms){
   const t = document.getElementById('toast');
   document.getElementById('toastText').textContent = msg;
@@ -932,7 +1094,7 @@ function renderInicio(){
   document.getElementById('homeBalance').innerHTML = `${intPart}<span class="cents">,${decPart||'00'}€</span>`;
 
   const monthDate = homeMonthDate();
-  const monthTxs = DATA.transactions.filter(t=>{
+  const monthTxs = statTransactions().filter(t=>{
     if(!acc) return false;
     const d=new Date(t.date+'T12:00:00');
     return d.getMonth()===monthDate.getMonth() && d.getFullYear()===monthDate.getFullYear() && t.accountId===acc.id;
@@ -1045,7 +1207,7 @@ function renderCalendario(){
   }
   document.getElementById('calGrid').innerHTML = html;
 
-  const monthTxs = DATA.transactions.filter(t=>{ const d=new Date(t.date+'T12:00:00'); return d.getFullYear()===year && d.getMonth()===month; });
+  const monthTxs = statTransactions().filter(t=>{ const d=new Date(t.date+'T12:00:00'); return d.getFullYear()===year && d.getMonth()===month; });
   const ingresos = monthTxs.filter(t=>t.type==='ingreso').reduce((s,t)=>s+t.amount,0);
   const gastos = monthTxs.filter(t=>t.type==='gasto').reduce((s,t)=>s+t.amount,0);
   document.getElementById('calSummary').innerHTML = `
@@ -1074,7 +1236,7 @@ function openDayModal(iso){
     const iconHtml = t.type==='transferencia' ? `<div class="move-icon transferencia">${svg('transfer')}</div>` : catBadge(cat,'move-icon');
     return `<div class="move-row" data-editid="${t.id}" style="margin:0 0 4px;">
       ${iconHtml}
-      <div class="move-mid"><div class="move-cat">${name}</div><div class="move-note">${t.note?t.note:(accountById(t.accountId)?.name||'')}</div></div>
+      <div class="move-mid"><div class="move-cat">${name}</div><div class="move-note">${moveNoteHtml(t)}</div></div>
       <div class="move-amt ${t.type}">${amtStr}</div>
     </div>`;
   }).join('');
@@ -1100,6 +1262,7 @@ function renderCuentas(){
       <div class="acc-bal" style="color:${accountBalance(a.id)>=0?'var(--text)':'var(--red)'}">${fmtMoney(accountBalance(a.id))}€</div>
     </div>`).join('') || `<div class="empty">${svg('empty')}<p>No tienes cuentas todavía</p></div>`;
   document.getElementById('cuentasList').querySelectorAll('[data-editacc]').forEach(b=>b.addEventListener('click', ()=>openAccountModal(b.dataset.editacc)));
+  renderOwedSection();
   renderBankCard();
 }
 document.getElementById('btnTransfer').addEventListener('click', openTransferModal);
@@ -1118,7 +1281,7 @@ function periodRange(gran, offset){
   return {start:new Date(m.getFullYear(),m.getMonth(),1), end:new Date(m.getFullYear(),m.getMonth()+1,0,23,59,59), label:monthYearLabel(m)};
 }
 function inRange(dateISO, range){ const d=new Date(dateISO+'T12:00:00'); return d>=range.start && d<=range.end; }
-function txInPeriod(gran, offset){ const range = periodRange(gran, offset); return DATA.transactions.filter(t=>inRange(t.date, range)); }
+function txInPeriod(gran, offset){ const range = periodRange(gran, offset); return statTransactions().filter(t=>inRange(t.date, range)); }
 function groupSmallCategories(entries, total){
   if(entries.length<=5 || total<=0) return {main:entries, otherAmt:0, otherCount:0};
   const THRESH = 0.035;
@@ -1171,7 +1334,7 @@ function priorAverage(gran, offset, maxCount){
   for(let i=1;i<=maxCount;i++){
     if(periodsSinceFirstTx(gran) <= i) break;
     const r = periodRange(gran, offset-i);
-    const txsP = DATA.transactions.filter(t=>inRange(t.date,r));
+    const txsP = statTransactions().filter(t=>inRange(t.date,r));
     sumIngreso += txsP.filter(t=>t.type==='ingreso').reduce((s,t)=>s+t.amount,0);
     sumGasto += txsP.filter(t=>t.type==='gasto').reduce((s,t)=>s+t.amount,0);
     n++;
@@ -1256,7 +1419,7 @@ function gastoMensualStats(g){
   const isFuture = new Date(y, m-1, 1) > new Date(now.getFullYear(), now.getMonth(), 1);
   const today = isCurrent ? now.getDate() : (isFuture ? 0 : daysInMonth);
   const range = {start:new Date(y, m-1, 1), end:new Date(y, m-1, daysInMonth, 23,59,59)};
-  const spent = DATA.transactions.filter(t=>t.type==='gasto' && t.accountId===g.accountId && inRange(t.date, range)).reduce((s,t)=>s+t.amount,0);
+  const spent = statTransactions().filter(t=>t.type==='gasto' && t.accountId===g.accountId && inRange(t.date, range)).reduce((s,t)=>s+t.amount,0);
   const daysRemaining = isCurrent ? Math.max(0, daysInMonth-today) : (isFuture ? daysInMonth : 0);
   const remaining = Math.max(0, g.target-spent);
   const dailyBudget = daysRemaining>0 ? remaining/daysRemaining : 0;
@@ -1341,7 +1504,7 @@ function overallMonthlyTrend(monthsBack){
   for(let i=1;i<=monthsBack;i++){
     if(periodsSinceFirstTx('mes')<=i) break;
     const r = periodRange('mes',-i);
-    const txs = DATA.transactions.filter(t=>inRange(t.date,r));
+    const txs = statTransactions().filter(t=>inRange(t.date,r));
     const net = txs.filter(t=>t.type==='ingreso').reduce((s,t)=>s+t.amount,0) - txs.filter(t=>t.type==='gasto').reduce((s,t)=>s+t.amount,0);
     total+=net; count++;
   }
@@ -1352,7 +1515,7 @@ function overallMonthlyIngreso(monthsBack){
   for(let i=1;i<=monthsBack;i++){
     if(periodsSinceFirstTx('mes')<=i) break;
     const r = periodRange('mes',-i);
-    total += DATA.transactions.filter(t=>t.type==='ingreso' && inRange(t.date,r)).reduce((s,t)=>s+t.amount,0);
+    total += statTransactions().filter(t=>t.type==='ingreso' && inRange(t.date,r)).reduce((s,t)=>s+t.amount,0);
     count++;
   }
   return count>0 ? total/count : 0;
@@ -1462,7 +1625,7 @@ function evolutionSeries(gran, count){
   const labels=[], ingresos=[], gastos=[], beneficio=[], perdida=[];
   for(let i=count-1;i>=0;i--){
     const range = periodRange(gran, -i);
-    const txs = DATA.transactions.filter(t=>inRange(t.date, range));
+    const txs = statTransactions().filter(t=>inRange(t.date, range));
     const ing = txs.filter(t=>t.type==='ingreso').reduce((s,t)=>s+t.amount,0);
     const gas = txs.filter(t=>t.type==='gasto').reduce((s,t)=>s+t.amount,0);
     const net = ing-gas;
@@ -1581,7 +1744,7 @@ function renderMovimientos(){
         if(t.type==='transferencia'){ name=(accountById(t.accountId)?.name||'?')+' → '+(accountById(t.toAccountId)?.name||'?'); amtStr=fmtMoney(t.amount)+'€'; }
         else{ cat=categoryById(t.categoryId)||{name:'Otros',icon:'otros',color:'#98989F'}; name=cat.name; amtStr=(t.type==='gasto'?'-':'+')+fmtMoney(t.amount)+'€'; }
         const iconHtml = t.type==='transferencia' ? `<div class="move-icon transferencia">${svg('transfer')}</div>` : catBadge(cat,'move-icon');
-        return `<div class="move-row" data-editid="${t.id}">${iconHtml}<div class="move-mid"><div class="move-cat">${name}</div><div class="move-note">${t.note?t.note:(accountById(t.accountId)?.name||'')}</div></div><div class="move-amt ${t.type}">${amtStr}</div></div>`;
+        return `<div class="move-row" data-editid="${t.id}">${iconHtml}<div class="move-mid"><div class="move-cat">${name}</div><div class="move-note">${moveNoteHtml(t)}</div></div><div class="move-amt ${t.type}">${amtStr}</div></div>`;
       }).join('');
       return `<div class="move-day-lbl">${fmtDateLong(d)}</div><div class="move-list">${rows}</div>`;
     }).join('');
@@ -1692,7 +1855,7 @@ function generateDueRecurrentes(){
 
 function spentThisMonthByCategory(catId){
   const now = new Date();
-  return DATA.transactions.filter(t=>{
+  return statTransactions().filter(t=>{
     if(t.type!=='gasto' || t.categoryId!==catId) return false;
     const d = new Date(t.date+'T12:00:00');
     return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear();
@@ -1819,8 +1982,11 @@ function renderExportarScreen(){
 }
 function buildExportRows(txs){
   return txs.map(t=>{
-    if(t.type==='transferencia') return { Fecha:t.date, Tipo:'Transferencia', Cuenta:accountById(t.accountId)?.name||'', 'Cuenta destino':accountById(t.toAccountId)?.name||'', Categoría:'', Importe:t.amount, Observaciones:t.note||'' };
-    return { Fecha:t.date, Tipo: t.type==='gasto'?'Gasto':'Ingreso', Cuenta:accountById(t.accountId)?.name||'', 'Cuenta destino':'', Categoría: categoryById(t.categoryId)?.name||'', Importe: t.type==='gasto' ? -t.amount : t.amount, Observaciones:t.note||'' };
+    if(t.type==='transferencia') return { Fecha:t.date, Tipo:'Transferencia', Cuenta:accountById(t.accountId)?.name||'', 'Cuenta destino':accountById(t.toAccountId)?.name||'', Categoría:'', Importe:t.amount, 'Coste real':'', 'Compartido / reembolso':'', Observaciones:t.note||'' };
+    let costeReal = '', vinculo = '';
+    if(t.type==='gasto' && isSharedGasto(t)){ const i = sharedInfo(t); costeReal = -i.net; vinculo = 'Compartido · devuelto '+fmtMoney(i.back)+'€'; }
+    if(t.type==='ingreso'){ const g = linkedGasto(t); if(g) vinculo = 'Reembolso de: '+gastoLabel(g); }
+    return { Fecha:t.date, Tipo: t.type==='gasto'?'Gasto':'Ingreso', Cuenta:accountById(t.accountId)?.name||'', 'Cuenta destino':'', Categoría: categoryById(t.categoryId)?.name||'', Importe: t.type==='gasto' ? -t.amount : t.amount, 'Coste real':costeReal, 'Compartido / reembolso':vinculo, Observaciones:t.note||'' };
   });
 }
 function exportExcel(txs, filename){
@@ -1828,10 +1994,10 @@ function exportExcel(txs, filename){
   const rows = buildExportRows(txs.sort((a,b)=>a.date.localeCompare(b.date)));
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.json_to_sheet(rows);
-  ws['!cols'] = [{wch:12},{wch:14},{wch:14},{wch:14},{wch:16},{wch:12},{wch:30}];
+  ws['!cols'] = [{wch:12},{wch:14},{wch:14},{wch:14},{wch:16},{wch:12},{wch:12},{wch:34},{wch:30}];
   XLSX.utils.book_append_sheet(wb, ws, 'Movimientos');
   const byCat = {};
-  txs.filter(t=>t.type==='gasto').forEach(t=>{ const n=categoryById(t.categoryId)?.name||'Otros'; byCat[n]=(byCat[n]||0)+t.amount; });
+  txs.filter(t=>t.type==='gasto').forEach(t=>{ const n=categoryById(t.categoryId)?.name||'Otros'; const amt=isSharedGasto(t)?sharedInfo(t).net:t.amount; if(amt>0) byCat[n]=(byCat[n]||0)+amt; });
   const sumRows = Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([k,v])=>({Categoría:k,'Total gastado':v}));
   if(sumRows.length){ const ws2 = XLSX.utils.json_to_sheet(sumRows); XLSX.utils.book_append_sheet(wb, ws2, 'Resumen categorías'); }
   const ingresos = txs.filter(t=>t.type==='ingreso').reduce((s,t)=>s+t.amount,0);
@@ -1855,6 +2021,7 @@ const flowFoot = document.getElementById('flowFoot');
 function openRegisterFlow(){
   if(!DATA.accounts.length){ showToast('Crea primero una cuenta en "Cuentas"'); return; }
   flow.step=0; flow.type='gasto'; flow.amountStr='0'; flow.accountId = DATA.accounts[0]?.id || null; flow.categoryId=null; flow.note=''; flow.date=todayISO();
+  flow.shared=false; flow.expectedBack=''; flow.reimburse=false; flow.reimbursesId='';
   flowPanel.classList.add('open'); renderFlow();
 }
 document.getElementById('flowBack').addEventListener('click', ()=>{ if(flow.step===0){ flowPanel.classList.remove('open'); return;} flow.step--; renderFlow(); });
@@ -1933,10 +2100,21 @@ function renderFlowNote(){
         <div class="summary-row"><span class="k">Categoría</span><span class="v">${categoryById(flow.categoryId)?.name||'—'}</span></div>
       </div>
       <div class="form-row nopad"><label>Fecha</label><input type="date" id="flowDate" value="${flow.date}" max="${todayISO()}"></div>
-      <textarea class="note-field" id="noteField" placeholder="Observaciones (opcional)" rows="2">${flow.note}</textarea>
+      <textarea class="note-field" id="noteField" placeholder="Observaciones (opcional)" rows="2">${escHtml(flow.note)}</textarea>
+      ${flow.type==='gasto' ? `
+        <label class="switch-row"><span class="sw-text"><b>Gasto compartido</b><small>Pagaste por otros y te lo devolverán</small></span><input type="checkbox" id="flowShared" ${flow.shared?'checked':''}><i class="switch"></i></label>
+        <div class="form-row nopad share-extra" id="flowSharedExtra" style="display:${flow.shared?'block':'none'}"><label>Te deben (opcional)</label><input type="tel" inputmode="decimal" id="flowExpected" placeholder="Ej: 75" value="${escHtml(flow.expectedBack)}"></div>
+      ` : `
+        <label class="switch-row"><span class="sw-text"><b>Es un reembolso</b><small>Te devuelven parte de un gasto compartido</small></span><input type="checkbox" id="flowReimb" ${flow.reimburse?'checked':''}><i class="switch"></i></label>
+        <div class="form-row nopad share-extra" id="flowReimbExtra" style="display:${flow.reimburse?'block':'none'}"><label>¿De qué gasto?</label><select id="flowReimbSel">${linkOptionsHtml(flow.reimbursesId)}</select></div>
+      `}
     </div>
   `;
   document.getElementById('noteField').addEventListener('input', e=>{ flow.note = e.target.value; });
+  wireSwitch('flowShared', 'flowSharedExtra', v=>{ flow.shared = v; });
+  wireSwitch('flowReimb', 'flowReimbExtra', v=>{ flow.reimburse = v; });
+  const fe = document.getElementById('flowExpected'); if(fe) fe.addEventListener('input', e=>{ flow.expectedBack = e.target.value; });
+  const fr = document.getElementById('flowReimbSel'); if(fr) fr.addEventListener('change', e=>{ flow.reimbursesId = e.target.value; });
   document.getElementById('flowDate').addEventListener('change', e=>{ flow.date = e.target.value || todayISO(); });
   flowFoot.innerHTML = `<button class="btn solid ${flow.type}" id="flowSave">${svg('check')} Guardar ${flow.type==='gasto'?'gasto':'ingreso'}</button>`;
   document.getElementById('flowSave').addEventListener('click', saveTransaction);
@@ -1944,10 +2122,24 @@ function renderFlowNote(){
 function saveTransaction(){
   const amountNum = parseFloat(flow.amountStr.replace(',','.'))||0;
   if(amountNum<=0 || !flow.accountId || !flow.categoryId) return;
-  DATA.transactions.push({ id:uid(), type:flow.type, accountId:flow.accountId, categoryId:flow.categoryId, amount:Math.round(amountNum*100)/100, date:flow.date||todayISO(), note:flow.note.trim(), createdAt:new Date().toISOString() });
+  const tx = { id:uid(), type:flow.type, accountId:flow.accountId, categoryId:flow.categoryId, amount:Math.round(amountNum*100)/100, date:flow.date||todayISO(), note:flow.note.trim(), createdAt:new Date().toISOString() };
+  let label = flow.type==='gasto' ? 'Gasto' : 'Ingreso';
+  if(flow.type==='gasto' && flow.shared){
+    tx.shared = true;
+    const exp = parseAmountStr(flow.expectedBack);
+    if(exp>0) tx.expectedBack = round2(Math.min(exp, tx.amount));
+    label = 'Gasto compartido';
+  }
+  if(flow.type==='ingreso' && flow.reimburse){
+    const g = DATA.transactions.find(x=>x.id===flow.reimbursesId && x.type==='gasto');
+    if(!g){ showToast('Elige de qué gasto es el reembolso'); return; }
+    tx.reimbursesId = g.id; g.shared = true;
+    label = 'Reembolso';
+  }
+  DATA.transactions.push(tx);
   persist();
   flowPanel.classList.remove('open');
-  showToast((flow.type==='gasto'?'Gasto':'Ingreso')+' guardado · '+fmtMoney(amountNum)+'€');
+  showToast(label+' guardado · '+fmtMoney(amountNum)+'€');
   refreshCurrentContext();
 }
 function refreshCurrentContext(){
@@ -2109,7 +2301,7 @@ function openEditTransaction(txId){
       <div class="form-row nopad"><label>Desde → Hacia</label><input type="text" disabled value="${accountById(t.accountId)?.name||'?'} → ${accountById(t.toAccountId)?.name||'?'}"></div>
       <div class="form-row nopad"><label>Importe (€)</label><input type="tel" inputmode="decimal" id="mEAmount" value="${t.amount}" step="0.01"></div>
       <div class="form-row nopad"><label>Fecha</label><input type="date" id="mEDate" value="${t.date}"></div>
-      <div class="form-row nopad"><label>Nota</label><input type="text" id="mENote" value="${t.note||''}"></div>
+      <div class="form-row nopad"><label>Nota</label><input type="text" id="mENote" value="${escHtml(t.note||'')}"></div>
       <div class="btn-row"><button class="btn danger" id="mEDelete">Eliminar</button><button class="btn solid" id="mESave">Guardar</button></div>
     `);
   } else {
@@ -2120,17 +2312,54 @@ function openEditTransaction(txId){
       <div class="form-row nopad"><label>Cuenta</label><select id="mEAccount">${DATA.accounts.map(a=>`<option value="${a.id}" ${a.id===t.accountId?'selected':''}>${a.name}</option>`).join('')}</select></div>
       <div class="form-row nopad"><label>Categoría</label><select id="mECategory">${cats.map(c=>`<option value="${c.id}" ${c.id===t.categoryId?'selected':''}>${c.name}</option>`).join('')}</select></div>
       <div class="form-row nopad"><label>Fecha</label><input type="date" id="mEDate" value="${t.date}"></div>
-      <div class="form-row nopad"><label>Nota</label><input type="text" id="mENote" value="${t.note||''}"></div>
+      <div class="form-row nopad"><label>Nota</label><input type="text" id="mENote" value="${escHtml(t.note||'')}"></div>
+      ${t.type==='gasto' ? sharedEditHtml(t) : reimbEditHtml(t)}
       <div class="btn-row"><button class="btn danger" id="mEDelete">Eliminar</button><button class="btn solid" id="mESave">Guardar</button></div>
     `);
+    wireSwitch('mEShared', 'mESharedExtra');
+    wireSwitch('mEReimb', 'mEReimbExtra');
   }
-  document.getElementById('mEDelete').addEventListener('click', ()=>{ DATA.transactions = DATA.transactions.filter(x=>x.id!==txId); persist(); closeModal(); refreshCurrentContext(); });
+  document.getElementById('mEDelete').addEventListener('click', ()=>{
+    // Si borras un gasto compartido, sus reembolsos se conservan como ingresos normales.
+    const orphans = DATA.transactions.filter(x=>x.type==='ingreso' && x.reimbursesId===txId);
+    orphans.forEach(r=>{ delete r.reimbursesId; });
+    DATA.transactions = DATA.transactions.filter(x=>x.id!==txId);
+    persist(); closeModal(); refreshCurrentContext();
+    if(orphans.length) showToast(orphans.length===1 ? 'Su reembolso queda como ingreso normal' : 'Sus '+orphans.length+' reembolsos quedan como ingresos normales', 3500);
+  });
   document.getElementById('mESave').addEventListener('click', ()=>{
-    const amount = parseFloat(document.getElementById('mEAmount').value.replace(',','.'))||0;
+    const amount = round2(parseAmountStr(document.getElementById('mEAmount').value));
     if(amount<=0){ showToast('Importe no válido'); return; }
+    // Validar el reembolso antes de tocar nada
+    const reimbEl = document.getElementById('mEReimb');
+    let reimbTarget = null;
+    if(t.type==='ingreso' && reimbEl && reimbEl.checked){
+      reimbTarget = DATA.transactions.find(x=>x.id===document.getElementById('mEReimbSel').value && x.type==='gasto');
+      if(!reimbTarget){ showToast('Elige de qué gasto es el reembolso'); return; }
+    }
     t.amount = amount; t.date = document.getElementById('mEDate').value || t.date; t.note = document.getElementById('mENote').value.trim();
     if(t.type!=='transferencia'){ t.accountId = document.getElementById('mEAccount').value; t.categoryId = document.getElementById('mECategory').value; }
+    let msg = '';
+    if(t.type==='gasto'){
+      const sh = document.getElementById('mEShared');
+      if(sh && sh.checked){
+        t.shared = true;
+        const exp = parseAmountStr(document.getElementById('mEExpected').value);
+        if(exp>0) t.expectedBack = round2(Math.min(exp, t.amount)); else delete t.expectedBack;
+        const cl = document.getElementById('mEClosed');
+        if(cl && cl.checked) t.sharedClosed = true; else delete t.sharedClosed;
+      } else {
+        const linked = DATA.transactions.filter(x=>x.type==='ingreso' && x.reimbursesId===t.id);
+        linked.forEach(r=>{ delete r.reimbursesId; });
+        delete t.shared; delete t.expectedBack; delete t.sharedClosed;
+        if(linked.length) msg = linked.length===1 ? 'Su reembolso queda como ingreso normal' : 'Sus '+linked.length+' reembolsos quedan como ingresos normales';
+      }
+    } else if(t.type==='ingreso'){
+      if(reimbTarget){ t.reimbursesId = reimbTarget.id; reimbTarget.shared = true; }
+      else delete t.reimbursesId;
+    }
     persist(); closeModal(); refreshCurrentContext();
+    if(msg) showToast(msg, 3500);
   });
 }
 
@@ -2225,27 +2454,64 @@ document.getElementById('quickOpenApp').addEventListener('click', ()=>{
    Aqui solo se guarda un "token" de conexion (necesario para pedir
    movimientos), nunca tus datos financieros - esos siguen viviendo
    unicamente en el almacenamiento local de tu telefono, como siempre. */
+function escHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function bankMeta(){
+  if(!DATA.bankConnection) DATA.bankConnection = { token:null, lastSync:null, ignored:[], accountId:null };
+  if(!Array.isArray(DATA.bankConnection.ignored)) DATA.bankConnection.ignored = [];
+  if(DATA.bankConnection.accountId===undefined) DATA.bankConnection.accountId = null;
+  return DATA.bankConnection;
+}
 function renderBankCard(){
   const el = document.getElementById('bankCard');
+  if(!el) return;
   if(!WORKER_BASE_URL){
-    el.innerHTML = `<div class="bank-card"><div class="bank-status"><span class="bank-dot off"></span><span style="font-size:13.5px; color:var(--text-dim);">Aun no configurado</span></div><p class="proj-note">Cuando despliegues el servidor de conexion bancaria, pon su direccion en <code>WORKER_BASE_URL</code> dentro del archivo y este apartado se activara solo.</p></div>`;
+    el.innerHTML = `<div class="bank-card"><div class="bank-status"><span class="bank-dot off"></span><span class="bank-title" style="color:var(--text-dim);">Aun no configurado</span></div></div>`;
     return;
   }
-  const connected = !!(DATA.bankConnection && DATA.bankConnection.token);
-  el.innerHTML = `
+  const bc = DATA.bankConnection;
+  const connected = !!(bc && bc.token);
+  const targetAcc = connected && bc.accountId ? accountById(bc.accountId) : null;
+  el.innerHTML = connected ? `
     <div class="bank-card">
-      <div class="bank-status"><span class="bank-dot ${connected?'on':'off'}"></span><span style="font-size:13.5px; font-weight:600;">${connected?'CaixaBank conectado':'Sin conectar'}</span></div>
-      ${connected ? `<p class="proj-note" style="margin-bottom:14px;">Ultima sincronizacion: ${DATA.bankConnection.lastSync ? fmtDateShortEs(DATA.bankConnection.lastSync) : 'nunca'}</p>` : `<p class="proj-note" style="margin-bottom:14px;">Conecta tu cuenta para traer tus movimientos automaticamente. Siempre podras revisarlos antes de que se guarden.</p>`}
-      <div class="btn-row">
-        ${connected ? `<button class="btn ghost2" id="btnBankDisconnect" style="flex:0;">Desconectar</button><button class="btn solid" id="btnBankSync">Sincronizar ahora</button>` : `<button class="btn solid" id="btnBankConnect" style="width:100%;">Conectar CaixaBank</button>`}
-      </div>
-    </div>
-  `;
+      <div class="bank-status"><span class="bank-dot on"></span><span class="bank-title">CaixaBank conectado</span></div>
+      <p class="bank-meta">Última sincronización: ${bc.lastSync ? fmtDateShortEs(bc.lastSync) : 'nunca'}${targetAcc ? `<br>Se importa en <b>${escHtml(targetAcc.name)}</b>` : ''}</p>
+      <button class="btn solid" id="btnBankSync">Sincronizar ahora</button>
+      <button class="bank-link-btn" id="btnBankDisconnect">Desconectar banco</button>
+    </div>` : `
+    <div class="bank-card">
+      <div class="bank-status"><span class="bank-dot off"></span><span class="bank-title">Sin conectar</span></div>
+      <p class="bank-meta">Conecta tu cuenta para traer tus movimientos automáticamente. Siempre podrás revisarlos antes de que se guarden.</p>
+      <button class="btn solid" id="btnBankConnect">Conectar CaixaBank</button>
+    </div>`;
   const connectBtn = document.getElementById('btnBankConnect'); if(connectBtn) connectBtn.addEventListener('click', connectBank);
   const syncBtn = document.getElementById('btnBankSync'); if(syncBtn) syncBtn.addEventListener('click', syncBank);
   const disconnectBtn = document.getElementById('btnBankDisconnect'); if(disconnectBtn) disconnectBtn.addEventListener('click', ()=>{
-    DATA.bankConnection = null; persist(); renderBankCard(); showToast('Banco desconectado');
+    // Solo se olvida la conexion; se conserva la fecha, la cuenta destino y lo descartado.
+    bankMeta().token = null; persist(); renderBankCard(); showToast('Banco desconectado');
   });
+}
+function renderOwedSection(){
+  const el = document.getElementById('owedSection'); if(!el) return;
+  const {list, total} = owedSummary();
+  if(!list.length){ el.innerHTML = ''; return; }
+  const n = list.length, pl = n===1 ? '' : 's';
+  el.innerHTML = `
+    <div class="section-title">Te deben</div>
+    <div class="bank-card" style="margin-bottom:4px;">
+      ${total>0 ? `<div class="owed-total">${fmtMoney(total)}€</div>` : ''}
+      <p class="bank-meta" style="margin-bottom:4px;">${n} gasto${pl} compartido${pl} pendiente${pl}. Toca uno para editarlo, o ciérralo si ya no esperas más.</p>
+      ${list.map(g=>{
+        const i = sharedInfo(g); const c = categoryById(g.categoryId);
+        const name = (g.note && g.note.trim()) || (c ? c.name : 'Gasto');
+        const sub = i.expected!=null ? `faltan ${fmtMoney(i.pending)}€ de ${fmtMoney(i.expected)}€` : (i.back>0 ? `te han devuelto ${fmtMoney(i.back)}€` : 'sin reembolsos aún');
+        return `<div class="owed-row"><div class="owed-mid" data-owedopen="${g.id}"><div class="owed-name">${escHtml(name)}</div><div class="owed-sub">${fmtDateShortEs(g.date)} · pagaste ${fmtMoney(g.amount)}€ · ${sub}</div></div><button class="owed-close" data-owedclose="${g.id}">Cerrar</button></div>`;
+      }).join('')}
+    </div>`;
+  el.querySelectorAll('[data-owedopen]').forEach(b=>b.addEventListener('click', ()=>openEditTransaction(b.dataset.owedopen)));
+  el.querySelectorAll('[data-owedclose]').forEach(b=>b.addEventListener('click', ()=>{
+    const g = DATA.transactions.find(x=>x.id===b.dataset.owedclose); if(!g) return;
+    g.sharedClosed = true; persist(); renderCuentas(); showToast('Gasto compartido cerrado');
+  }));
 }
 async function connectBank(){
   try{
@@ -2267,82 +2533,132 @@ function checkBankCallback(){
   const token = params.get('token');
   history.replaceState(null, '', window.location.pathname + window.location.search);
   if(token){
-    DATA.bankConnection = { token, lastSync: null };
+    bankMeta().token = token;
     persist();
     showToast('Banco conectado correctamente');
   }
   return true;
 }
+let bankSyncBusy = false;
 async function syncBank(){
   if(!DATA.bankConnection || !DATA.bankConnection.token){ showToast('Conecta primero tu banco'); return; }
+  if(bankSyncBusy) return;   // evita doble consulta (el banco limita las diarias)
+  bankSyncBusy = true;
+  const btn = document.getElementById('btnBankSync');
+  if(btn){ btn.disabled = true; btn.textContent = 'Sincronizando...'; }
   showToast('Descargando movimientos...');
   try{
-    const resp = await fetch(`${WORKER_BASE_URL}/sync?token=${encodeURIComponent(DATA.bankConnection.token)}`);
-    const data = await resp.json();
+    const bc = bankMeta();
+    // Primera vez: ultimos 7 dias. Despues: desde la ultima sincronizacion (2 dias de margen).
+    const d = bc.lastSync ? new Date(bc.lastSync+'T12:00:00') : new Date();
+    d.setDate(d.getDate() - (bc.lastSync ? 2 : 7));
+    const from = d.toISOString().slice(0,10);
+    const resp = await fetch(`${WORKER_BASE_URL}/sync?token=${encodeURIComponent(bc.token)}&from=${from}`);
+    let data;
+    try{ data = await resp.json(); }catch(_){ data = { error:'Respuesta no valida del servidor (codigo '+resp.status+')' }; }
     if(data.error){
       const detalle = data.detail ? (typeof data.detail==='string'?data.detail:JSON.stringify(data.detail)) : '';
       showToast(`${data.error}${detalle ? ' — '+detalle.slice(0,160) : ''}`, 8000);
       return;
     }
-    const already = new Set(DATA.transactions.filter(t=>t.externalId).map(t=>t.externalId));
-    const nuevos = (data.movimientos||[]).filter(m=>!already.has(m.externalId));
-    if(!nuevos.length){ showToast('No hay movimientos nuevos'); return; }
+    const known = new Set(DATA.transactions.filter(t=>t.externalId).map(t=>t.externalId).concat(bc.ignored));
+    const nuevos = (data.movimientos||[]).filter(m=>m && m.externalId && !known.has(m.externalId));
+    if(!nuevos.length){ bc.lastSync = todayISO(); persist(); showToast('No hay movimientos nuevos'); return; }
     openBankReview(nuevos);
   }catch(e){ showToast('No se pudo sincronizar: '+e.message, 8000); }
+  finally{
+    bankSyncBusy = false;
+    renderBankCard();
+  }
 }
 function openBankReview(movimientos){
+  const bc = bankMeta();
   const selected = new Set(movimientos.map((m,i)=>i));
+  const defaultAcc = (bc.accountId && accountById(bc.accountId)) || primaryAccount();
   document.getElementById('bankReviewScreen').classList.add('open');
-  function render(){
-    const body = document.getElementById('bankReviewBody');
-    body.innerHTML = `
-      <p class="proj-note" style="padding:0 22px 14px;">Hemos encontrado ${movimientos.length} movimiento${movimientos.length===1?'':'s'} nuevo${movimientos.length===1?'':'s'}. Revisa la categoria de cada uno y desmarca los que no quieras importar.</p>
-      <div class="card">
-        ${movimientos.map((m,i)=>{
-          const catsOfType = DATA.categories.filter(c=>c.type===m.type);
-          const cat = catsOfType.find(c=>c.id===m.suggestedCategory) || catsOfType.find(c=>c.name==='Otros') || catsOfType[0];
-          return `<div class="review-row ${selected.has(i)?'selected':''}" data-idx="${i}">
-            <div class="review-check"></div>
-            <div class="review-mid">
-              <div class="review-desc">${m.description}</div>
-              <div class="review-sub">${fmtDateShortEs(m.date)} - ${m.type==='gasto'?'Gasto':'Ingreso'}</div>
-              <select class="review-cat-select" data-cat-idx="${i}">${catsOfType.map(c=>`<option value="${c.id}" ${c.id===(cat&&cat.id)?'selected':''}>${c.name}</option>`).join('')}</select>
-            </div>
-            <div class="review-amt ${m.type}">${m.type==='gasto'?'-':'+'}${fmtMoney(m.amount)}€</div>
-          </div>`;
-        }).join('')}
+  const body = document.getElementById('bankReviewBody');
+  const n = movimientos.length;
+  body.innerHTML = `
+    <p class="proj-note" style="padding:0 22px 14px;">Hemos encontrado ${n} movimiento${n===1?'':'s'} nuevo${n===1?'':'s'}. Revisa la categoria de cada uno y desmarca los que ya hubieras apuntado a mano.</p>
+    <div class="card">
+      <div class="form-row nopad" style="margin-bottom:6px;"><label>Importar en la cuenta</label>
+        <select id="bankTargetAccount">${DATA.accounts.map(a=>`<option value="${a.id}" ${defaultAcc && a.id===defaultAcc.id?'selected':''}>${escHtml(a.name)}</option>`).join('')}</select>
       </div>
-      <div class="btn-row" style="margin:16px 22px;"><button class="btn solid" id="btnBankImport" style="width:100%;">Importar seleccionados</button></div>
-    `;
-    body.querySelectorAll('.review-row').forEach(row=>row.addEventListener('click', e=>{
-      if(e.target.tagName==='SELECT') return;
-      const idx = parseInt(row.dataset.idx);
-      if(selected.has(idx)) selected.delete(idx); else selected.add(idx);
-      row.classList.toggle('selected');
-    }));
-    document.getElementById('btnBankImport').addEventListener('click', ()=>{
-      const acc = primaryAccount();
-      if(!acc){ showToast('Crea primero una cuenta'); return; }
-      let count = 0;
-      movimientos.forEach((m,i)=>{
-        if(!selected.has(i)) return;
-        const sel = body.querySelector(`[data-cat-idx="${i}"]`);
-        const categoryId = sel ? sel.value : m.suggestedCategory;
-        DATA.transactions.push({
-          id:uid(), type:m.type, accountId:acc.id, categoryId,
-          amount:Math.round(m.amount*100)/100, date:m.date, note:m.description,
-          externalId:m.externalId, createdAt:new Date().toISOString(),
-        });
-        count++;
-      });
-      DATA.bankConnection.lastSync = todayISO();
-      persist();
-      document.getElementById('bankReviewScreen').classList.remove('open');
-      showToast(`${count} movimiento${count===1?'':'s'} importado${count===1?'':'s'}`);
-      refreshCurrentContext(); renderBankCard();
+      ${movimientos.map((m,i)=>{
+        const catsOfType = DATA.categories.filter(c=>c.type===m.type);
+        const cat = catsOfType.find(c=>c.id===m.suggestedCategory) || catsOfType.find(c=>c.name==='Otros') || catsOfType[0];
+        return `<div class="review-row selected" data-idx="${i}">
+          <div class="review-check"></div>
+          <div class="review-mid">
+            <div class="review-desc">${escHtml(m.description)}</div>
+            <div class="review-sub">${fmtDateShortEs(m.date)} · ${m.type==='gasto'?'Gasto':'Ingreso'}</div>
+            <select class="review-cat-select" data-cat-idx="${i}">${catsOfType.map(c=>`<option value="${c.id}" ${cat && c.id===cat.id?'selected':''}>${escHtml(c.name)}</option>`).join('')}</select>
+            ${m.type==='gasto'
+              ? `<button type="button" class="review-share" data-share-idx="${i}">Compartido</button>`
+              : `<select class="review-link-select" data-link-idx="${i}">${reviewLinkOptions(m, movimientos)}</select>`}
+          </div>
+          <div class="review-amt ${m.type}">${m.type==='gasto'?'-':'+'}${fmtMoney(m.amount)}€</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="btn-row" style="margin:16px 22px;"><button class="btn solid" id="btnBankImport" style="width:100%;">Importar seleccionados (${n})</button></div>
+  `;
+  const importBtn = document.getElementById('btnBankImport');
+  const refreshCount = ()=>{ importBtn.textContent = `Importar seleccionados (${selected.size})`; };
+  const shareSet = new Set();
+  body.querySelectorAll('[data-share-idx]').forEach(b=>b.addEventListener('click', ()=>{
+    const idx = parseInt(b.dataset.shareIdx, 10);
+    if(shareSet.has(idx)) shareSet.delete(idx); else shareSet.add(idx);
+    b.classList.toggle('on', shareSet.has(idx));
+  }));
+  body.querySelectorAll('.review-row').forEach(row=>row.addEventListener('click', e=>{
+    if(e.target.closest('select, option, .review-share')) return;
+    const idx = parseInt(row.dataset.idx, 10);
+    if(selected.has(idx)) selected.delete(idx); else selected.add(idx);
+    row.classList.toggle('selected', selected.has(idx));
+    refreshCount();
+  }));
+  importBtn.addEventListener('click', ()=>{
+    const accSel = document.getElementById('bankTargetAccount');
+    const acc = accSel ? accountById(accSel.value) : defaultAcc;
+    if(!acc){ showToast('Crea primero una cuenta'); return; }
+    let count = 0, linked = 0;
+    const newIds = {};
+    const build = (m,i)=>{
+      const sel = body.querySelector(`[data-cat-idx="${i}"]`);
+      return { id:uid(), type:m.type, accountId:acc.id, categoryId: sel ? sel.value : m.suggestedCategory,
+        amount:Math.round(m.amount*100)/100, date:m.date, note:m.description,
+        externalId:m.externalId, createdAt:new Date().toISOString() };
+    };
+    // 1) gastos primero, para poder vincular reembolsos de esta misma lista
+    movimientos.forEach((m,i)=>{
+      if(m.type!=='gasto' || !selected.has(i)) return;
+      const tx = build(m,i);
+      if(shareSet.has(i)) tx.shared = true;
+      DATA.transactions.push(tx); newIds[i] = tx.id; count++;
     });
-  }
-  render();
+    // 2) ingresos, con su posible vinculo de reembolso
+    movimientos.forEach((m,i)=>{
+      if(m.type==='gasto' || !selected.has(i)) return;
+      const tx = build(m,i);
+      const ls = body.querySelector(`[data-link-idx="${i}"]`);
+      const v = ls ? ls.value : '';
+      let gid = null;
+      if(v.startsWith('batch:')) gid = newIds[parseInt(v.slice(6),10)] || null;
+      else if(v && DATA.transactions.some(x=>x.id===v && x.type==='gasto')) gid = v;
+      if(gid){ tx.reimbursesId = gid; const g = DATA.transactions.find(x=>x.id===gid); if(g) g.shared = true; linked++; }
+      DATA.transactions.push(tx); count++;
+    });
+    // 3) lo desmarcado no vuelve a aparecer
+    movimientos.forEach((m,i)=>{ if(!selected.has(i) && !bc.ignored.includes(m.externalId)) bc.ignored.push(m.externalId); });
+    if(bc.ignored.length > 1000) bc.ignored = bc.ignored.slice(-1000);
+    bc.accountId = acc.id;
+    bc.lastSync = todayISO();
+    persist();
+    document.getElementById('bankReviewScreen').classList.remove('open');
+    showToast(`${count} movimiento${count===1?'':'s'} importado${count===1?'':'s'} en ${acc.name}${linked ? ` · ${linked} reembolso${linked===1?'':'s'} vinculado${linked===1?'':'s'}` : ''}`, 3500);
+    refreshCurrentContext(); renderBankCard();
+  });
 }
 document.getElementById('bankReviewBack').addEventListener('click', ()=> document.getElementById('bankReviewScreen').classList.remove('open'));
 
