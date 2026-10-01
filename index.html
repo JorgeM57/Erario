@@ -647,6 +647,12 @@ html[data-theme="rose"]{
 .theme-opt.sel .theme-check{background:var(--accent); border-color:var(--accent); color:var(--on-accent);}
 
 .donut-empty-note{width:100%; text-align:center; font-size:12px; color:var(--text-faint); padding:4px 0 2px;}
+
+/* ---------- ANALISIS: TOTAL EN EL CENTRO / CUENTA ---------- */
+.donut-center.an-center .pct.an-total{white-space:nowrap; letter-spacing:-.02em;}
+.an-acc{display:inline-flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:600; padding:8px 12px 8px 14px; border-radius:999px;}
+.an-acc:active{background:var(--surface-2);}
+.an-filter-dot.an-all{background:conic-gradient(var(--accent), var(--green), var(--red), var(--accent));}
 </style>
 </head>
 <body>
@@ -1280,7 +1286,7 @@ function switchTab(tab){
 }
 document.getElementById('bottomNav').addEventListener('click', e=>{
   const b = e.target.closest('.nav-btn'); if(!b) return;
-  if(b.dataset.tab==='analisis'){ resumenState.accountId = null; resumenState.tipo = 'gasto'; }
+  if(b.dataset.tab==='analisis'){ const pa = primaryAccount(); resumenState.accountId = pa ? pa.id : null; resumenState.tipo = 'gasto'; }
   switchTab(b.dataset.tab);
 });
 
@@ -1493,7 +1499,7 @@ document.getElementById('btnTransfer').addEventListener('click', openTransferMod
 document.getElementById('btnAddAccount').addEventListener('click', ()=>openAccountModal(null));
 
 /* ============ ANÁLISIS ============ */
-const resumenState = { gran:'mes', offset:0, accountId:null, tipo:'gasto' };
+const resumenState = { gran:'mes', offset:0, accountId:undefined, tipo:'gasto' };
 let chartCat=null, chartEvol=null, chartSaldo=null;
 
 function periodRange(gran, offset){
@@ -1507,7 +1513,10 @@ function periodRange(gran, offset){
 function inRange(dateISO, range){ const d=new Date(dateISO+'T12:00:00'); return d>=range.start && d<=range.end; }
 function byAccount(accId){ return t => !accId || t.accountId===accId || t.toAccountId===accId; }
 function txInPeriod(gran, offset, accId){ const range = periodRange(gran, offset); return statTransactions().filter(byAccount(accId)).filter(t=>inRange(t.date, range)); }
-function analisisAccount(){ const id = resumenState.accountId; if(id && !accountById(id)) resumenState.accountId = null; return resumenState.accountId; }
+function analisisAccount(){
+  if(resumenState.accountId===undefined){ const pa = primaryAccount(); resumenState.accountId = pa ? pa.id : null; }
+  const id = resumenState.accountId; if(id && !accountById(id)) resumenState.accountId = null; return resumenState.accountId;
+}
 function groupSmallCategories(entries, total){
   if(entries.length<=5 || total<=0) return {main:entries, otherAmt:0, otherCount:0, otherIds:[]};
   const THRESH = 0.035;
@@ -1534,7 +1543,7 @@ function renderAnalisis(){
   document.getElementById('analisisBody').innerHTML = `
     <div class="gran-row">${['dia','semana','mes','anio'].map(g=>`<button data-gran="${g}" class="${resumenState.gran===g?'active':''}">${({dia:'Día',semana:'Semana',mes:'Mes',anio:'Año'})[g]}</button>`).join('')}</div>
     <div class="period-nav"><button data-nav="-1" aria-label="Anterior">${svg('chevL')}</button><button class="lbl period-pick" id="anPeriodPick" aria-label="Elegir periodo">${range.label}<span class="period-pick-ico">${svg('chevD')}</span></button><button data-nav="1" aria-label="Siguiente" style="visibility:${resumenState.offset>=0?'hidden':'visible'}">${svg('chevR')}</button></div>
-    ${analisisAccount() ? `<div class="an-filter"><button class="an-filter-chip" id="anClearAcc"><span class="an-filter-dot" style="background:${accountById(analisisAccount()).color}"></span>Solo ${escHtml(accountById(analisisAccount()).name)}<span class="an-filter-x">${svg('close')}</span></button></div>` : ''}
+    <div class="an-filter"><button class="an-acc" id="anAccPick" aria-label="Elegir cuenta">${analisisAccount() ? `<span class="an-filter-dot" style="background:${accountById(analisisAccount()).color}"></span>${escHtml(accountById(analisisAccount()).name)}` : `<span class="an-filter-dot an-all"></span>Todas las cuentas`}<span class="period-pick-ico">${svg('chevD')}</span></button></div>
     <div class="kpi-row">
       <div class="kpi"><div class="kpi-label">Ingresos</div><div class="kpi-val income">${fmtMoney(ingresos)}€</div></div>
       <div class="kpi"><div class="kpi-label">Gastos</div><div class="kpi-val expense">${fmtMoney(gastos)}€</div></div>
@@ -1556,7 +1565,7 @@ function renderAnalisis(){
     ${renderComparativaCard(ingresos, gastos)}
   `;
   document.querySelectorAll('#analisisBody [data-tipo]').forEach(b=>b.addEventListener('click', ()=>{ if(resumenState.tipo===b.dataset.tipo) return; resumenState.tipo = b.dataset.tipo; renderAnalisis(); }));
-  const clr = document.getElementById('anClearAcc'); if(clr) clr.addEventListener('click', ()=>{ resumenState.accountId = null; renderAnalisis(); });
+  const accPick = document.getElementById('anAccPick'); if(accPick) accPick.addEventListener('click', openAnalisisAccountPicker);
   document.querySelectorAll('#analisisBody [data-gran]').forEach(b=>b.addEventListener('click', ()=>{ resumenState.gran=b.dataset.gran; resumenState.offset=0; renderAnalisis(); }));
   document.querySelectorAll('#analisisBody [data-nav]').forEach(b=>b.addEventListener('click', ()=>{ const next = resumenState.offset + parseInt(b.dataset.nav); if(next>0) return; resumenState.offset = next; renderAnalisis(); }));
   const pick = document.getElementById('anPeriodPick'); if(pick) pick.addEventListener('click', openPeriodPicker);
@@ -1575,6 +1584,15 @@ function firstDataYear(){
   if(!DATA.transactions.length) return now.getFullYear();
   const first = DATA.transactions.reduce((m,t)=> t.date<m ? t.date : m, DATA.transactions[0].date);
   return Math.min(new Date(first+'T12:00:00').getFullYear(), now.getFullYear());
+}
+function openAnalisisAccountPicker(){
+  const cur = analisisAccount();
+  const total = DATA.accounts.reduce((s,a)=>s+accountBalance(a.id),0);
+  const row = (id, icon, color, name, bal) => `<button class="option-row ${ (id||null)===(cur||null) ? 'selected':'' }" data-anacc="${id||''}"><div class="option-icon" style="background:${color}">${svg(icon)}</div><div class="option-name">${escHtml(name)}</div><div class="option-sub">${fmtMoney(bal)}€</div><div class="option-check"></div></button>`;
+  openModal(`<div class="modal-title">Ver cuenta</div>
+    <p class="proj-note" style="margin:-8px 0 14px;">Elige qué cuenta quieres analizar. Por defecto se muestra tu cuenta principal.</p>
+    <div class="option-list">${DATA.accounts.map(a=>row(a.id, a.icon, a.color, a.name + (a.id===DATA.primaryAccountId ? ' · Principal' : ''), accountBalance(a.id))).join('')}${row('', 'wallet', 'var(--surface-3)', 'Todas las cuentas', total)}</div>`);
+  modalContent.querySelectorAll('[data-anacc]').forEach(b=>b.addEventListener('click', ()=>{ resumenState.accountId = b.dataset.anacc || null; closeModal(); renderAnalisis(); }));
 }
 function openPeriodPicker(){
   const now = new Date();
@@ -1931,6 +1949,13 @@ function placeDonutCenter(ch){
   el.style.left = (cv.offsetLeft + arc.x) + 'px';
   el.style.top = (cv.offsetTop + arc.y) + 'px';
   el.style.width = Math.max(64, Math.floor(arc.innerRadius * 1.62)) + 'px';
+  const num = el.querySelector('.an-total');
+  if(num){
+    const maxW = Math.floor(arc.innerRadius * 1.5);
+    const textW = ()=>{ const r = document.createRange(); r.selectNodeContents(num); return r.getBoundingClientRect().width; };
+    let size = 26; num.style.fontSize = size+'px';
+    while(textW() > maxW && size > 13){ size--; num.style.fontSize = size+'px'; }
+  }
   el.classList.add('placed');
 }
 const donutCenterPlugin = { id:'erarioDonutCenter', afterDraw(ch){ placeDonutCenter(ch); } };
@@ -1963,7 +1988,7 @@ function drawAnalisisCharts(){
         const total = totalGasto;
         const top = entries[0] || ['', grouped.otherAmt];
         const topPct = total>0 ? Math.round(top[1]/total*100) : 0;
-        if(centerEl) centerEl.innerHTML = `<div class="pct">${topPct}%</div><div class="lbl">${entries.length?(categoryById(top[0])||{name:'Otros'}).name:'Otras'}</div>`;
+        if(centerEl) centerEl.innerHTML = `<div class="pct an-total">${fmtMoney(total)}€</div><div class="lbl">${tipo==='ingreso' ? 'Total ingresos' : 'Total gastos'}</div>`;
         const dLabels = entries.map(([cid])=>(categoryById(cid)||{name:'Otros'}).name);
         const dData = entries.map(e=>e[1]);
         const dColors = entries.map(([cid])=>catColor(categoryById(cid)));
